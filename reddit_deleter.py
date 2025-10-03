@@ -2,9 +2,11 @@ import praw
 from datetime import datetime, timezone
 
 account = input("Which account? (no /u)")
-subreddit = input("Which subreddit? (no r/), 'all for everthing'")
+sub = input("Which subreddit? (no r/), 'all' for everthing")
+comment_count = int(input("How many comments?"))
+action = input("edit or delete?")
 
-def authenticate():
+def authenticate(account):
     """
     Authenticate with Reddit's API using account.
     """
@@ -13,7 +15,7 @@ def authenticate():
     print(f'Authenticated as {r.user.me()}')
     return r
 
-def get_comments(r, subreddit, limit = 20):
+def get_comments(r, subreddit, limit = comment_count):
     """
     Get the most recent 20 comments from my account. Store in a list of dicts.
 
@@ -40,6 +42,31 @@ def edit_comments(r, comments):
     """
     Replace a comment's text with gibberish.
     """
+    togo = len(comments)
     for i in comments:
-        r.comment(i['id']).edit('Scrambled eggs and bacon make me thirsgry.')
-        print(f'Comment was {r.comment['id'].body}')
+        print(f"Comment was {r.comment(i['id']).body}")
+        r.comment(i['id']).edit('Angry bacon sets the tone. Simple tuna dines alone. This comment made gibberish by your mom.')
+        print(f"Comment is now {r.comment(i['id']).body}")
+        togo-=1
+        print(f"{togo} comments left to edit.\n")
+
+def delete_comments(r, comments):
+    """
+    Call each comment and delete it.
+    """
+    togo = len(comments)
+    for i in comments:
+        print(f"Deleting: {r.comment(i['id']).body}")
+        r.comment(i['id']).delete()
+        togo-=1
+        print(f"{togo} comments left to go.\n")
+
+if __name__ == '__main__':
+    r = authenticate(account)
+    c = get_comments(r, sub, limit = comment_count)
+    if action == 'edit':
+        edit_comments(r, c)
+    elif action == 'delete':
+        delete_comments(r, c)
+    else:
+        print('Invalid action. edit or delete. Try again.')
