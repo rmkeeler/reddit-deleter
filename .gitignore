@@ -1,0 +1,5 @@
+praw.ini
+*.ipynb
+.ipynb_checkpoints
+env/
+__pycache__/
