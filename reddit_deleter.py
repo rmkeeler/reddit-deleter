@@ -44,8 +44,8 @@ def edit_comments(r, comments):
     """
     togo = len(comments)
     for i in comments:
-        print(f"Comment was {r.comment(i['id']).body}")
-        r.comment(i['id']).edit('Angry bacon sets the tone. Simple tuna dines alone. This comment made gibberish by your mom.')
+        print(f"Comment on {i['created_on']} was:\n {r.comment(i['id']).body}")
+        r.comment(i['id']).edit('Whoopsies! 404 comment not found.')
         print(f"Comment is now {r.comment(i['id']).body}")
         togo-=1
         print(f"{togo} comments left to edit.\n")
@@ -56,7 +56,7 @@ def delete_comments(r, comments):
     """
     togo = len(comments)
     for i in comments:
-        print(f"Deleting: {r.comment(i['id']).body}")
+        print(f"Deleting from {i['created_on']}: {r.comment(i['id']).body}")
         r.comment(i['id']).delete()
         togo-=1
         print(f"{togo} comments left to go.\n")
